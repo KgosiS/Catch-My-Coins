@@ -65,5 +65,4 @@ In today’s fast-paced world, keeping track of personal finances can be overwhe
 
 ---
 
-## 📂 Project Structure
 
