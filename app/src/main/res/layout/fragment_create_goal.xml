@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green"
+    tools:context=".CreateGoalFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_gravity="start"
+        android:src="@drawable/ic_back"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CREATE GOAL"
+        android:textColor="@color/yellow"
+        android:textStyle="bold"
+        android:textSize="29sp"
+        android:textAlignment="center"/>
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:hint="   Title"
+            android:inputType="text"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"/>
+        <EditText
+            android:id="@+id/targetAmountEditText"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:hint="   Target amount"
+            android:layout_marginTop="10dp"
+            android:inputType="text"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"/>
+        <EditText
+            android:id="@+id/accumulatedAmountEditText"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:hint="   Accumulated amount"
+            android:layout_marginTop="10dp"
+            android:inputType="text"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"/>
+        <Button
+            android:id="@+id/createButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:text="SAVE"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/yellow"/>
+
+
+        <TextView
+            android:id="@+id/cancelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Cancel"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+    </LinearLayout>
+</FrameLayout>

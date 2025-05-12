@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/green"
+    tools:context=".AddIncomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:id="@+id/picker"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/addExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:enabled="false"
+                android:layout_marginEnd="8dp"
+                android:text="Expense" />
+
+            <Button
+                android:id="@+id/addIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Income"
+                android:backgroundTint="@color/yellow"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Add Income"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="@color/yellow"
+            android:textSize="25sp" />
+
+        <EditText
+            android:id="@+id/titleInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:hint="  Title"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background" />
+
+        <EditText
+            android:id="@+id/descriptionInput"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:hint="  Description"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="4" />
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/input_background" />
+
+        <EditText
+            android:id="@+id/dateInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:hint="  Select Date"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_calendar" />
+
+        <EditText
+            android:id="@+id/startTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:hint="  Start Time"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_time" />
+
+        <EditText
+            android:id="@+id/endTimeInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:hint="  End Time"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"
+            android:focusable="false"
+            android:drawableEnd="@drawable/ic_time" />
+
+        <EditText
+            android:id="@+id/amountInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:hint="  Amount"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@drawable/input_background"
+            android:inputType="numberDecimal" />
+
+        <Button
+            android:id="@+id/uploadImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Upload Image"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/ic_upload"
+            android:backgroundTint="@color/yellow" />
+
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
+            android:scaleType="centerCrop"
+            android:contentDescription="Image Preview"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/createButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="30dp"
+            android:text="Create"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/yellow" />
+
+        <TextView
+            android:id="@+id/cancelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Cancel"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+</ScrollView>
