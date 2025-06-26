@@ -43,6 +43,16 @@ In today’s fast-paced world, keeping track of personal finances can be overwhe
   - Accumulated amount
 - View and monitor your savings/spending goals.
 
+### 🎮 Gamification: Earn Badges
+To make money management more engaging, **CatchMyCoins** introduces a **badge system** that rewards users for financial achievements.  
+Users can earn badges by:
+- Logging consistent income entries  
+- Meeting or exceeding financial goals  
+- Avoiding excessive expenses  
+- Maintaining a positive balance over time  
+
+This adds a fun and motivational layer to personal finance!
+
 ### 📊 Income Distribution Chart *(planned)*
 - Pie chart showing income distribution by category.
 
@@ -64,5 +74,3 @@ In today’s fast-paced world, keeping track of personal finances can be overwhe
 | **SharedPreferences** | Session and goal tracking |
 
 ---
-
-
