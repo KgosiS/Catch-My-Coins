@@ -3,13 +3,11 @@ package com.example.catchmycoins
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,33 +15,31 @@ import androidx.recyclerview.widget.RecyclerView
 class GoalsFragment : Fragment() {
 
     private lateinit var dbHelper: UserDatabaseHelper
-    private lateinit var goalsAdapter: GoalAdapter
-    private lateinit var goalsList: RecyclerView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MinMaxGoalAdapter
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var addButton: ImageButton
     private lateinit var backButton: ImageView
-    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_budget_goals, container, false)
 
+        // Initialize database helper
         dbHelper = UserDatabaseHelper(requireContext())
-        goalsList = view.findViewById(R.id.listOfGoals)
+
+        // Initialize UI components
+        recyclerView = view.findViewById(R.id.goalRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         addButton = view.findViewById(R.id.add_button)
         backButton = view.findViewById(R.id.back)
 
+        sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
-        sharedPreferences = requireActivity().getSharedPreferences("UserPrefs",MODE_PRIVATE)
-        dbHelper = UserDatabaseHelper(requireContext())
-        goalsList.layoutManager = LinearLayoutManager(requireContext())
-        val userId =sharedPreferences.getInt("userId",0)
-        val goals =dbHelper.getAllGoals(userId)
-        goalsAdapter = GoalAdapter(goals)
-        goalsList.adapter =goalsAdapter
-
-
-
+        // Set click listeners
         addButton.setOnClickListener {
             openAddGoalFragment()
         }
@@ -52,10 +48,17 @@ class GoalsFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
+        // Load and display goals
+        loadGoals()
+
         return view
     }
 
-
+    private fun loadGoals() {
+        val goals = dbHelper.getAllMinMaxGoals()
+        adapter = MinMaxGoalAdapter(goals) // Removed totalExpenses param
+        recyclerView.adapter = adapter
+    }
 
     private fun openAddGoalFragment() {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()

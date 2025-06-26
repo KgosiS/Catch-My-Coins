@@ -1,26 +1,17 @@
 package com.example.catchmycoins
 
-
-
-
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-
 
 class ExpenseVsIncomeFragment : Fragment(R.layout.fragment_expense_vs_income) {
 
@@ -31,84 +22,100 @@ class ExpenseVsIncomeFragment : Fragment(R.layout.fragment_expense_vs_income) {
     private lateinit var expenseVsIncomeChart: PieChart
     private lateinit var transactionList: RecyclerView
     private lateinit var emptyTransactionText: TextView
-   private lateinit var addIncomeButton: Button
-   private lateinit var addExpenseButton: Button
-   private lateinit var learnAboutMoney: LinearLayout
+
+    private lateinit var addTransaction: LinearLayout
+    private lateinit var badgesEarned: LinearLayout
+    private lateinit var goals: LinearLayout
+    private lateinit var learnAboutMoney: LinearLayout
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Ensure context is available before initializing dbHelper
-        dbHelper = UserDatabaseHelper(requireContext())  // This should be fine in onViewCreated
+        // Database
+        dbHelper = UserDatabaseHelper(requireContext())
 
-        // Initialize views
+        // Layout references
         displayExpensePrice = view.findViewById(R.id.displayExpensePrice)
         displayIncomePrice = view.findViewById(R.id.displayIncomePrice)
         displayBalance = view.findViewById(R.id.displayBalance)
         expenseVsIncomeChart = view.findViewById(R.id.expenseVSincome)
         transactionList = view.findViewById(R.id.transactionList)
         emptyTransactionText = view.findViewById(R.id.emptyTransactionText)
-        addIncomeButton = view.findViewById(R.id.addIncome)
-        addExpenseButton = view.findViewById(R.id.addExpense)
+
+        addTransaction = view.findViewById(R.id.addTransaction)
+        badgesEarned = view.findViewById(R.id.badgesEarned)
+        goals = view.findViewById(R.id.goals)
         learnAboutMoney = view.findViewById(R.id.salary)
+
+        // Click handlers
+        addTransaction.setOnClickListener {
+            openFragment(CategoryFragment())
+        }
+        badgesEarned.setOnClickListener {
+            openFragment(BadgesEarnedFragment())
+        }
+        goals.setOnClickListener {
+            openFragment(GoalsFragment())
+        }
         learnAboutMoney.setOnClickListener {
             openFragment(LearnAboutMoneyFragment())
         }
-        addIncomeButton.setOnClickListener {
-            openFragment(AddIncomeFragment())
-        }
-        addExpenseButton.setOnClickListener {
-            openFragment(AddExpenseFragment())
-        }
 
+        // Load data
+        loadAndDisplayTransactionData()
+    }
 
-
-        // Fetch all transactions (expenses and income)
+    private fun loadAndDisplayTransactionData() {
         val transactions = dbHelper.getTransactions()
 
-        // Separate expenses and income
         val expenses = transactions.filter { it.type == "Expense" }
         val income = transactions.filter { it.type == "Income" }
 
-        val totalExpenses = expenses.sumByDouble { it.amount }
-        val totalIncome = income.sumByDouble { it.amount }
+        val totalExpenses = expenses.sumOf { it.amount }
+        val totalIncome = income.sumOf { it.amount }
+        val balance = totalIncome - totalExpenses
 
-        displayExpensePrice.text = "R ${totalExpenses}"
-        displayIncomePrice.text = "R ${totalIncome}"
-        displayBalance.text = "R ${totalIncome - totalExpenses}"
+        displayExpensePrice.text = "R %.2f".format(totalExpenses)
+        displayIncomePrice.text = "R %.2f".format(totalIncome)
+        displayBalance.text = "R %.2f".format(balance)
 
-        // Set up the PieChart
         setupPieChart(totalExpenses, totalIncome)
 
-        // Set up RecyclerView with transactions
-        if (expenses.isNotEmpty() || income.isNotEmpty()) {
-            emptyTransactionText.visibility = View.GONE
-            val allTransactions = expenses + income
-            val transactionAdapter = TransactionAdapter(allTransactions)
-            transactionList.layoutManager = LinearLayoutManager(requireContext())
-            transactionList.adapter = transactionAdapter
-        } else {
+        if (transactions.isEmpty()) {
             emptyTransactionText.visibility = View.VISIBLE
+            transactionList.visibility = View.GONE
+        } else {
+            emptyTransactionText.visibility = View.GONE
+            transactionList.visibility = View.VISIBLE
+
+            transactionList.layoutManager = LinearLayoutManager(requireContext())
+            transactionList.adapter = TransactionAdapter(transactions)
         }
     }
 
     private fun setupPieChart(totalExpenses: Double, totalIncome: Double) {
-        val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(totalExpenses.toFloat(), "Expenses"))
-        entries.add(PieEntry(totalIncome.toFloat(), "Income"))
+        val entries = listOf(
+            PieEntry(totalExpenses.toFloat(), "Expenses"),
+            PieEntry(totalIncome.toFloat(), "Income")
+        )
 
-        val dataSet = PieDataSet(entries, "Income vs Expense")
-        dataSet.setColors(Color.RED, Color.GREEN)
-        dataSet.valueTextColor = Color.BLACK
-        dataSet.valueTextSize = 18f
+        val dataSet = PieDataSet(entries, "Overview")
+        dataSet.colors = listOf(Color.RED, Color.GREEN)
+        dataSet.valueTextColor = Color.WHITE
+        dataSet.valueTextSize = 16f
 
-        val pieData = PieData(dataSet)
-        expenseVsIncomeChart.data = pieData
-        expenseVsIncomeChart.invalidate() // refresh chart
+        val data = PieData(dataSet)
+        expenseVsIncomeChart.data = data
+        expenseVsIncomeChart.description.isEnabled = false
+        expenseVsIncomeChart.setUsePercentValues(true)
+        expenseVsIncomeChart.setEntryLabelColor(Color.BLACK)
+        expenseVsIncomeChart.invalidate()
     }
+
     private fun openFragment(fragment: Fragment) {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment)  // Replace the container with the new fragment
-        transaction.addToBackStack(null)  // Optionally add to back stack for navigation
-        transaction.commit()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

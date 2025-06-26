@@ -10,21 +10,9 @@
         android:id="@+id/nav_transactions"
         android:icon="@drawable/ic_transaction"
         android:title="Transactions" />
-
     <!-- Empty Item to Center FAB -->
     <item
         android:id="@+id/analysis"
         android:icon="@drawable/ic_analysis"
         android:title="Menu" />
-
-    <item
-        android:id="@+id/nav_category"
-        android:icon="@drawable/ic_category"
-        android:title="Category" />
-
-    <item
-        android:id="@+id/nav_goals"
-        android:icon="@drawable/ic_goals"
-        android:title="Goals" />
-
 </menu>

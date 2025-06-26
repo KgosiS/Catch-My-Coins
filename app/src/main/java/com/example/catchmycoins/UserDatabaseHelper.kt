@@ -45,26 +45,24 @@ class UserDatabaseHelper(context: Context) : SQLiteOpenHelper(context, "catch_co
 
 
         // Create goals table
-        val createGoalsTable = ("CREATE TABLE goals (" +
+        val createMinMaxGoalsTable = ("CREATE TABLE minmax_goals (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "userId INTEGER NOT NULL," +
-                "title TEXT NOT NULL," +
-                "targetAmount REAL NOT NULL," +
-                "accumulatedAmount REAL DEFAULT 0," +
-                "FOREIGN KEY(userId) REFERENCES users(id))")
-
+                "goalName TEXT NOT NULL," +
+                "min REAL NOT NULL," +
+                "max REAL NOT NULL)")
         // Execute the SQL commands
         db.execSQL(createUserTable)
         db.execSQL(createExpenseTable)
         db.execSQL(createIncomeTable)
-        db.execSQL(createGoalsTable)
+        db.execSQL(createMinMaxGoalsTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS users")
         db.execSQL("DROP TABLE IF EXISTS expenses")
         db.execSQL("DROP TABLE IF EXISTS income")
-        db.execSQL("DROP TABLE IF EXISTS goals")
+        db.execSQL("DROP TABLE IF EXISTS minmax_goals")
+
         onCreate(db)
     }
 
@@ -279,42 +277,7 @@ class UserDatabaseHelper(context: Context) : SQLiteOpenHelper(context, "catch_co
         return transactions
     }
 
-    // Insert a goal
-    fun insertGoal(goal: Goal) {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put("userId", goal.userId)
-            put("title", goal.title)
-            put("targetAmount", goal.targetAmount)
-            put("accumulatedAmount", goal.accumulatedAmount)
-        }
-        db.insert("goals", null, values)
-        db.close()
-    }
 
-    // Get all goals for a user
-    fun getAllGoals(userId: Int): List<Goal> {
-        val goals = mutableListOf<Goal>()
-        val db = readableDatabase
-
-        val cursor = db.rawQuery("SELECT * FROM goals WHERE userId = ?", arrayOf(userId.toString()))
-
-        if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getInt(0)
-                val title = cursor.getString(2)
-                val targetAmount = cursor.getDouble(3)
-                val accumulatedAmount = cursor.getDouble(4)
-
-                goals.add(Goal(id, userId, title, targetAmount, accumulatedAmount))
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-
-        return goals
-    }
     fun getAllTransactionsByDateRange(startDate: String, endDate: String): List<Transaction> {
         val transactions = mutableListOf<Transaction>()
         val db = readableDatabase
@@ -350,7 +313,71 @@ class UserDatabaseHelper(context: Context) : SQLiteOpenHelper(context, "catch_co
         cursor.close()
         return transactions
     }
+    // Sum total expenses amount
+    fun getExpenseCount(): Double {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT SUM(amount) FROM expenses", null)
+        val total = if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+        cursor.close()
+        return total
+    }
 
+    // Sum total income amount
+    fun getIncomeCount(): Double {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT SUM(amount) FROM income", null)
+        val total = if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+        cursor.close()
+        return total
+    }
+
+    fun insertMinMaxGoal(goal: MinMaxGoal): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("goalName", goal.goalName)
+            put("min", goal.min)
+            put("max", goal.max)
+        }
+        val result = db.insert("minmax_goals", null, values)
+        db.close()
+        return result != -1L
+    }
+
+    fun getAllExpensesTotal(): Double {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT SUM(amount) FROM expenses", null)
+
+        val total = if (cursor.moveToFirst()) {
+            cursor.getDouble(0)
+        } else {
+            0.0
+        }
+
+        cursor.close()
+        db.close()
+        return total
+    }
+
+    fun getAllMinMaxGoals(): List<MinMaxGoal> {
+        val goals = mutableListOf<MinMaxGoal>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM minmax_goals", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("goalName"))
+                val min = cursor.getDouble(cursor.getColumnIndexOrThrow("min"))
+                val max = cursor.getDouble(cursor.getColumnIndexOrThrow("max"))
+
+                goals.add(MinMaxGoal(id = id, goalName = name, min = min, max = max))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return goals
+    }
 
 
 

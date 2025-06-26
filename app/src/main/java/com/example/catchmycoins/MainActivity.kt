@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> openFragment(ExpenseVsIncomeFragment())
                 R.id.nav_transactions -> openFragment(TransactionsFragment())
-                R.id.nav_category -> openFragment(CategoryFragment())
-                R.id.nav_goals -> openFragment(GoalsFragment())
                 R.id.analysis -> openFragment(TransactionMenuFragment())
                 else -> false
             }

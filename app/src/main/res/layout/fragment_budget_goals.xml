@@ -34,7 +34,7 @@
          android:src="@drawable/ic_budget_goals"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listOfGoals"
+            android:id="@+id/goalRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             tools:ignore="SpeakableTextPresentCheck" />
